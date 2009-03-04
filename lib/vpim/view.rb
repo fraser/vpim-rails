@@ -22,7 +22,7 @@ module Vpim
 
         t0 = Time.new.to_a
         t0[0] = t0[1] = t0[2] = 0 # sec,min,hour = 0
-        t0 = Time.local(*t0)
+        t0 = Time.zone.local(*t0)
         t1 = t0 + 7 * SECSPERDAY
 
         # Need to filter occurrences, too. Create modules for this on the fly.

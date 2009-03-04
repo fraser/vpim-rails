@@ -16,7 +16,7 @@ class Time
     # leap year will be rounded up to Mar 1 if the target date is not a leap
     # year.
     def plus_year(years)
-      Time.local(year + years, month, day, hour, min, sec, usec)
+      Time.zone.local(year + years, month, day, hour, min, sec, usec)
     end
 
     # Returns a new Time, +months+ later than this time. The day will be
@@ -25,7 +25,7 @@ class Time
     def plus_month(months)
       d = Date.new(year, month, day)
       d >>= months
-      Time.local(d.year, d.month, d.day, hour, min, sec, usec)
+      Time.zone.local(d.year, d.month, d.day, hour, min, sec, usec)
     end
 
     # Returns a new Time, +days+ later than this time.
@@ -34,7 +34,7 @@ class Time
     def plus_day(days)
       d = Date.new(year, month, day)
       d += days
-      Time.local(d.year, d.month, d.day, hour, min, sec, usec)
+      Time.zone.local(d.year, d.month, d.day, hour, min, sec, usec)
     end
 end
 

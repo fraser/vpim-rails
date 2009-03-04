@@ -440,7 +440,7 @@ module Vpim
               if(d.pop == "Z")
                 Time.gm(*d)
               else
-                Time.local(*d)
+                Time.zone.local(*d)
               end
             rescue ArgumentError => e
               raise Vpim::InvalidEncodingError, "Time.gm(#{d.join(', ')}) failed with #{e.message}"

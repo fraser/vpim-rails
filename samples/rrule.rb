@@ -48,7 +48,7 @@ opts.each do |opt, arg|
       date = ParseDate.parsedate(arg)
       date.pop
       date.pop
-      dtstart = Time.local(*date)
+      dtstart = Time.zone.local(*date)
   end
 end
 

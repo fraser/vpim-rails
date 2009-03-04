@@ -57,10 +57,8 @@ module Vpim
     # from a start time, +dtstart+ (which must the first of the set of
     # recurring times). If +rrule+ is nil, the set contains only +dtstart+.
     def initialize(dtstart, rrule = nil)
-       @dtstart = dtstart.getlocal
-       # The getlocal is a hack so that UTC times get converted to local,
-       # because yielded times are always local, because we don't support
-       # timezones.
+       @dtstart = dtstart.in_time_zone
+
        @rrule = rrule
 
        # Freq is mandatory, but must occur only once.
@@ -270,7 +268,7 @@ module Vpim
           hour.each do |h|
             min.each do |n|
               sec.each do |s|
-                y = Time.local(t.year, m, d, h, n, s, 0)
+                y = Time.zone.local(t.year, m, d, h, n, s, 0)
 
                 next if y.hour != h
 
@@ -447,7 +445,7 @@ module Vpim
     def self.time_from_rfc2425(str) #:nodoc:
       # With ruby1.8 we can use DateTime to do this quick-n-easy:
       #  dt = DateTime.parse(str)
-      #  Time.local(dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec, 0)
+      #  Time.zone.local(dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec, 0)
 
       # The time can be a DATE or a DATE-TIME, the latter always has a 'T' in it.
 
@@ -457,7 +455,7 @@ module Vpim
         if(d.pop == "Z")
           t = Time.gm(*d)
         else
-          t = Time.local(*d)
+          t = Time.zone.local(*d)
         end
       else
         d = Vpim.decode_date(str)
@@ -467,7 +465,7 @@ module Vpim
         # an instance of Date, and Time should allow itself to be compared to
         # Date... This hack will give odd results when comparing times, because
         # it will create a Time on the right date but whos time is 00:00:00.
-        t = Time.local(*d)
+        t = Time.zone.local(*d)
       end
       if t.month != d[1] || t.day != d[2] || (d[3] && t.hour != d[3])
         raise Vpim::InvalidEncodingError, "Error - datetime does not exist"
