@@ -502,7 +502,17 @@ module Vpim
         else
           n = rule[0].to_i
         end
-        dates |= DateGen.bywday(year, mon, Date.str2wday(rule[1]), n)
+        begin
+          dates |= DateGen.bywday(year, mon, Date.str2wday(rule[1]), n)
+        rescue ArgumentError => e
+          # Catch and ignore a very specific error type: 
+          # Those caused by rules like FREQ=MONTHLY;BYDAY=5SA, which as far as 
+          # I can tell are valid, but some months don't e.g., have a 5th Saturday 
+          unless e.message == 'n is out of bounds of month' && n == 5
+            raise
+          end
+        end
+
       end
       dates.sort!
       dates

@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vpim-rails}
-  s.version = "0.659"
+  s.version = "0.660"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sam Roberts", "Fraser Newton"]
