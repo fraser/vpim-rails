@@ -331,25 +331,25 @@ module Vpim
         begin
           case @freq
             when 'YEARLY' then
-              t = t.plus_year(@interval)
+              t += @interval.years
 
             when 'MONTHLY' then
-              t = t.plus_month(@interval)
+              t += @interval.months
 
             when 'WEEKLY' then
-              t = t.plus_day(@interval * 7)
+              t += (@interval * 7).days
 
             when 'DAILY' then
-              t = t.plus_day(@interval)
+              t += @interval.days
 
             when 'HOURLY' then
-              t += @interval * 60 * 60
+              t += @interval.hours
 
             when 'MINUTELY' then
-              t += @interval * 60
+              t += @interval.minutes
 
             when 'SECONDLY' then
-              t += @interval
+              t += @interval.seconds
 
             when nil
               return self
