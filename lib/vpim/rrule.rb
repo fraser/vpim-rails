@@ -452,7 +452,7 @@ module Vpim
         d = Vpim.decode_date_time(str)
         # We get [ year, month, day, hour, min, sec, usec, tz ]
         if(d.pop == "Z")
-          t = Time.gm(*d)
+          t = Time.use_zone("UTC") { Time.zone.local(*d) }
         else
           t = Time.zone.local(*d)
         end
