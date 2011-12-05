@@ -133,7 +133,12 @@ module Vpim
 
   # Encode a Time or DateTime object as "yyyymmddThhmmss"
   def Vpim.encode_date_time(d) # :nodoc:
-     "%0.4d%0.2d%0.2dT%0.2d%0.2d%0.2d" % [ d.year, d.mon, d.day, d.hour, d.min, d.sec ]
+    case d
+    when ActiveSupport::TimeWithZone
+      d.utc.strftime("%Y%m%dT%H%M%SZ")
+    else
+      "%0.4d%0.2d%0.2dT%0.2d%0.2d%0.2d" % [ d.year, d.mon, d.day, d.hour, d.min, d.sec ]
+    end
   end
 
   # Convert a RFC 2425 time into an array of [hour,min,sec,secfrac,timezone]
