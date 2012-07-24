@@ -113,13 +113,17 @@ TODO
 
     # The producer ID defaults to Vpim::PRODID but you can set it to something
     # specific to your application.
-    def Icalendar.create2(producer = Vpim::PRODID, tzinfo_id = nil) #:yield: self
+    def Icalendar.create2(producer = Vpim::PRODID, tzinfo_id = nil, custom_calendar_properties = {}) #:yield: self
       # FIXME - make the primary API
       di = DirectoryInfo.create( [ DirectoryInfo::Field.create('VERSION', '2.0') ], 'VCALENDAR' )
 
       di.push_unique DirectoryInfo::Field.create('PRODID', producer.to_str)
       di.push_unique DirectoryInfo::Field.create('X-WR-TIMEZONE', tzinfo_id) unless tzinfo_id.nil?
       di.push_unique DirectoryInfo::Field.create('CALSCALE', "Gregorian")
+
+      custom_calendar_properties.each do |property_key, property_value|
+        di.push_unique DirectoryInfo::Field.create(property_key, property_value)
+      end
 
       cal = new(di.to_a)
 
