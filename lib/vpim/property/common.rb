@@ -171,6 +171,11 @@ seq
             attachment = Attachment.decode(f, 'uri', 'FMTTYPE')
           end
         end
+
+        # Set a location for a calendar component 
+        def location
+          proptext 'LOCATION'
+        end
       end
 
     end
@@ -305,6 +310,11 @@ seq
           end
         end
 =end
+
+        # Set a location of component, see Icalendar::Property::Common#location.
+        def location(value)
+          set_text 'LOCATION', value
+        end
 
       end
 
