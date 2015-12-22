@@ -9,6 +9,7 @@
 require 'vpim/rfc2425'
 require 'vpim/date'
 require 'vpim/vpim'
+require 'active_support/time'
 
 =begin
 require 'pp'
@@ -263,15 +264,15 @@ module Vpim
         # Generate the yield set so BYSETPOS can be evaluated.
         yset = []
 
-        days.each do |m,d|
+        days.each do |y,m,d|
           hour.each do |h|
             min.each do |n|
               sec.each do |s|
-                y = Time.zone.local(t.year, m, d, h, n, s, 0)
+                time = Time.zone.local(y, m, d, h, n, s, 0)
 
-                next if y.hour != h
+                next if time.hour != h
 
-                yset << y
+                yset << time
               end
             end
           end
@@ -296,7 +297,7 @@ module Vpim
 
         # Yield the occurrence, if we haven't gone over COUNT, or past UNTIL, or
         # past the end of representable time.
-
+        #
         yset.each do |y|
           # The generated set can sometimes generate results earlier
           # than the DTSTART, skip them. Also, we already yielded
@@ -405,7 +406,7 @@ module Vpim
           @month = {}
 
           dates.each do |d|
-            @month[d.mon] = nil
+            @month[month_offset(d)] = nil
           end
         end
 
@@ -415,13 +416,45 @@ module Vpim
         #   otherwise
         #     add all those in dates
         @month.each do |mon, days|
-          days_in_mon = dates.find_all { |d| d.mon == mon }
+          days_in_mon = dates.find_all { |d| month_offset(d) == mon }
           days_in_mon = days_in_mon.map { |d| d.day }
 
           if days
             days_in_mon = days_in_mon & days
           end
           @month[mon] = days_in_mon
+        end
+      end
+
+      # @month is a structure of [{ mount => [days] }.
+      # To capture the month that is in a different year than ref.year, 
+      # it stores the offset of month. E.g. if now is Jan 2016, m = -1
+      # for representing Nov 2015.
+      def month_offset(d)
+        if d.year < @ref.year
+          d.mon - 12
+        elsif d.year > @ref.year
+          d.mon + 12
+        else
+          d.mon
+        end
+      end
+
+      def actual_month(m)
+        if m <= 0
+          m + 12
+        elsif m > 12
+          m - 12
+        else
+          m
+        end
+      end
+
+      def actual_year(m)
+        if m <= 0
+          @ref.year - (12 - m) / 12
+        else
+          @ref.year + (m - 1) / 12
         end
       end
 
@@ -435,7 +468,7 @@ module Vpim
 
         @month.keys.sort.each do |m|
           @month[m].sort.each do |d|
-            yield m, d
+            yield actual_year(m), actual_month(m), d
           end
         end
       end

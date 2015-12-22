@@ -15,6 +15,7 @@ end
 =end
 
 class TestRrule < Test::Unit::TestCase
+  Time.zone = 'Eastern Time (US & Canada)'
   Rrule = Vpim::Rrule
 
 #=begin

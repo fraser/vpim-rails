@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vpim-rails}
-  s.version = "0.667"
+  s.version = "0.668"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sam Roberts", "Fraser Newton"]
@@ -17,6 +17,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{iCalendar and vCard support for rails}
   s.test_files = ["test/test_all.rb", "test/test_date.rb", "test/test_dur.rb", "test/test_field.rb", "test/test_ical.rb", "test/test_repo.rb", "test/test_rrule.rb", "test/test_vcard.rb", "test/test_view.rb"]
+
+  s.add_dependency 'vpim'
+  s.add_dependency 'activesupport', '~> 4.2.2'
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
